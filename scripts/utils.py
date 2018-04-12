@@ -1,8 +1,9 @@
 import os, sys
 import json
+import paramiko
 
 
-def main():
+def print_signals():
 	path = sys.argv[1]
 	target_ssid = sys.argv[2]
 
@@ -42,7 +43,7 @@ def main():
 			print('\n')
 			print(data[scan]['signal'])
 			print('\n')
-tst
+
 
 if __name__ == "__main__":
-	main()
+	print_signals()
