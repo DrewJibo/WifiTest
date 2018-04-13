@@ -44,8 +44,12 @@ def run_tool(path, robot_name):
 
 """
 	Grabs bssid's and signals from json file.
+	Creates a new json file with those key-values.
 """
-def print_signals(path, target_ssid):
+def print_signals(path, target_ssid, new_path):
+	new_path = '{}/test.json'.format(new_path)
+	new_data = {}
+
 	with open(path, 'r') as file:
 		data = json.load(file)
 
@@ -54,12 +58,16 @@ def print_signals(path, target_ssid):
 			table = PrettyTable(['BSSID', 'Signal'])
 			signal = data[scan]['signal']
 			cmd = data[scan]['cmd']
+			bssid = None
 
 			print('\n\n****** Ethtool Statistics ******')
 			print(cmd)
 			print('\n')
-			table.add_row(['N/a', signal])
+			table.add_row([bssid, signal])
 			print(table)
+
+			new_data[scan] = {"cmd": cmd, "bssid": bssid, "signal": signal}
+
 
 		elif scan == 'wifi_station_dump':
 			table = PrettyTable(['BSSID', 'Signal'])
@@ -74,6 +82,8 @@ def print_signals(path, target_ssid):
 			table.add_row([bssid, signal])
 			print(table)
 
+			new_data[scan] = {"cmd": cmd, "bssid": bssid, "signal": signal}
+
 		elif scan == 'iw_scan':
 			table = PrettyTable(['BSSID', 'Signal'])
 			cmd = data[scan]['cmd']
@@ -84,12 +94,17 @@ def print_signals(path, target_ssid):
 			print(cmd)
 			print('\n')
 
+			new_data[scan] = {"cmd": cmd, "bss_objects": []}
+
 			for bss in data[scan]['bss_objects']:
 				ssid = bss['ssid']
 				if ssid == target_ssid:
 					signal = bss['signal']
 					bssid = bss['bssid']
 					table.add_row([bssid, signal])
+
+					new_data[scan]['bss_objects'].append({"bssid": bssid, "signal": signal})
+
 			print(table)
 
 		elif scan == 'link_info':
@@ -104,6 +119,11 @@ def print_signals(path, target_ssid):
 			table.add_row([bssid, signal])
 			print(table)
 			print('\n')
+
+			new_data[scan] = {"cmd": cmd, "bssid": bssid, "signal": signal}
+
+		with open(new_path, 'w') as file:
+			json.dump(new_data, file, indent=4)
 
 
 def main():
@@ -122,7 +142,7 @@ def main():
 	path_json = '{}/{}'.format(path, filename)
 
 	run_tool(path_json, robot_name)
-	print_signals(path_json, ssid)
+	print_signals(path_json, ssid, path)
 
 
 if __name__ == "__main__":
