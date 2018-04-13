@@ -39,6 +39,8 @@ def run_tool(path, robot_name):
 	Grabs bssid's and signals from json file.
 """
 def print_signals(path, target_ssid):
+	if '~' in path:
+		path = os.path.expanduser(path)
 	with open(path, 'r') as file:
 		data = json.load(file)
 
