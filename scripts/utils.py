@@ -31,7 +31,7 @@ def run_tool(path, robot_name):
 	ssh_client.exec_command(scan_wifi)
 
 	time.sleep(5)
-	copy_file = 'sshpass -p "{}" scp {}@{}:{} {}'.format(password, username, robot_name, src, path)
+	copy_file = 'rsync -auv {}@{}:{} {}'.format(username, robot_name, src, path)
 	os.system(copy_file)
 
 
@@ -39,7 +39,6 @@ def run_tool(path, robot_name):
 	Grabs bssid's and signals from json file.
 """
 def print_signals(path, target_ssid):
-	path = path
 	with open(path, 'r') as file:
 		data = json.load(file)
 
@@ -101,12 +100,19 @@ def print_signals(path, target_ssid):
 
 
 def main():
-	path = sys.argv[1]
-	ssid = sys.argv[2]
+	ssid = sys.argv[1]
+	path = os.path.expanduser('~/jibo/WifiTest/logs')
+	path_json = path + '/robot_wifi_info.json'
+
+	if not os.path.exists(path):
+		os.makedirs(path)
+
+	if os.path.exists(path_json):
+		os.remove(path_json)
 
 	robot_name = get_robot_name()
-	run_tool(path, robot_name)
-	print_signals(path, ssid)
+	run_tool(path_json, robot_name)
+	print_signals(path_json, ssid)
 
 
 if __name__ == "__main__":
