@@ -39,8 +39,7 @@ def run_tool(path, robot_name):
 	Grabs bssid's and signals from json file.
 """
 def print_signals(path, target_ssid):
-	if '~' in path:
-		path = os.path.expanduser(path)
+	path = path + '/test.json'
 	with open(path, 'r') as file:
 		data = json.load(file)
 
@@ -106,7 +105,7 @@ def main():
 	ssid = sys.argv[2]
 
 	if not os.path.exists(path):
-		os.system('mkdir logs')
+		os.system('mkdir ' + path)
 
 	robot_name = get_robot_name()
 	run_tool(path, robot_name)
