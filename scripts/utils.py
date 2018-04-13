@@ -28,11 +28,18 @@ def run_tool(path, robot_name):
 	ssh_client.connect(hostname=robot_name, username=username, password=password)
 
 	scan_wifi = 'python /opt/jibo/wifi-util/robot_wifi_info.py'
-	ssh_client.exec_command(scan_wifi)
+	stdin, stdout, stderr = ssh_client.exec_command(scan_wifi)
 
-	time.sleep(7)
-	copy_file = 'rsync -auv {}@{}:{} {}'.format(username, robot_name, src, path)
-	os.system(copy_file)
+	exit_status = stdout.channel.recv_exit_status()
+	if exit_status == 0:
+		print("Scanning complete.")
+		ftp_client = ssh_client.open_sftp()
+		ftp_client.get(src, path)
+		ftp_client.close()
+	else:
+		print("Error", exit_status)
+
+	ssh_client.close()
 
 
 """
