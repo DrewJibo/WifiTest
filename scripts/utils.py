@@ -30,8 +30,8 @@ def run_tool(path, robot_name):
 	scan_wifi = 'python /opt/jibo/wifi-util/robot_wifi_info.py'
 	ssh_client.exec_command(scan_wifi)
 
-	time.sleep(3)
-	copy_file = 'sshpass -p "{}" rsync -auv {}@{}:{} {}'.format(password, username, robot_name, src, path)
+	time.sleep(5)
+	copy_file = 'sshpass -p "{}" scp {}@{}:{} {}'.format(password, username, robot_name, src, path)
 	os.system(copy_file)
 
 
