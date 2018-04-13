@@ -30,7 +30,7 @@ def run_tool(path, robot_name):
 	scan_wifi = 'python /opt/jibo/wifi-util/robot_wifi_info.py'
 	ssh_client.exec_command(scan_wifi)
 
-	time.sleep(5)
+	time.sleep(7)
 	copy_file = 'rsync -auv {}@{}:{} {}'.format(username, robot_name, src, path)
 	os.system(copy_file)
 
@@ -101,16 +101,19 @@ def print_signals(path, target_ssid):
 
 def main():
 	ssid = sys.argv[1]
-	path = os.path.expanduser('~/jibo/WifiTest/logs')
-	path_json = path + '/robot_wifi_info.json'
+	robot_name = get_robot_name()
 
+	path = os.path.expanduser('~/jibo/WifiTest/logs/{}'.format(robot_name))
+	
 	if not os.path.exists(path):
 		os.makedirs(path)
 
-	if os.path.exists(path_json):
-		os.remove(path_json)
+	files = os.listdir(path)
+	file_count = len(files)
 
-	robot_name = get_robot_name()
+	filename = 'wifi-scan-{}.json'.format(file_count)
+	path_json = '{}/{}'.format(path, filename)
+
 	run_tool(path_json, robot_name)
 	print_signals(path_json, ssid)
 
