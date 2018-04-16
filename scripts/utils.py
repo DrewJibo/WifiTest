@@ -15,9 +15,9 @@ def get_robot_name():
 
 """
 	Uses ssh connection to run wifi tool on robot.
-	Copies output.json from robot to local machine.
+	Copies robot_wifi_info.json from robot to local machine.
 """
-def run_tool(path, robot_name):
+def run_tool_robot(path, robot_name):
 	username = 'root'
 	password = 'jibo'
 	src = '/opt/.spooky_spy_stuff/robot_wifi_info.json'
@@ -39,6 +39,20 @@ def run_tool(path, robot_name):
 		print("Error", exit_status)
 
 	ssh_client.close()
+
+
+"""
+	Runs local wifi tool.
+	Copies robot_wifi_info.json from output directory into logs
+"""
+def run_tool_local(path):
+	src = '~/jibo/utilities/output/robot_wifi_info.json'
+
+	scan_wifi = 'python ~/jibo/utilities/src/robot_wifi_info.py'
+	os.system(scan_wifi)
+
+	copy = 'cp {} {}'.format(src, path)
+	os.system(copy)
 
 
 """
@@ -66,7 +80,6 @@ def get_signals(path, target_ssid, new_path):
 			print(table)
 
 			new_data[scan] = {"cmd": cmd, "bssid": bssid, "signal": signal}
-
 
 		elif scan == 'wifi_station_dump':
 			table = PrettyTable(['BSSID', 'Signal'])
