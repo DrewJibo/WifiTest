@@ -4,7 +4,8 @@ import utils
 
 def main():
 	ssid = sys.argv[1]
-	robot_name = utils.get_robot_name()
+	#robot_name = utils.get_robot_name()
+	robot_name = None
 
 	path = os.path.expanduser('~/jibo/WifiTest/logs/{}'.format(robot_name))
 	
@@ -17,8 +18,7 @@ def main():
 	filename = 'wifi-scan-{}.json'.format(file_count)
 	path_json = '{}/{}'.format(path, filename)
 
-	#utils.run_tool(path_json, robot_name)
-	utils.run_tool_local(path_json)
+	utils.run_tool(path_json, robot_name)
 	utils.get_signals(path_json, ssid, path)
 
 

@@ -17,7 +17,12 @@ def get_robot_name():
 	Uses ssh connection to run wifi tool on robot.
 	Copies robot_wifi_info.json from robot to local machine.
 """
-def run_tool_robot(path, robot_name):
+def run_tool(path, robot_name=None):
+
+	if not robot_name:
+		run_tool_local(path)
+		return
+
 	username = 'root'
 	password = 'jibo'
 	src = '/opt/.spooky_spy_stuff/robot_wifi_info.json'
@@ -46,9 +51,10 @@ def run_tool_robot(path, robot_name):
 	Copies robot_wifi_info.json from output directory into logs
 """
 def run_tool_local(path):
+	path_tool = os.path.expanduser('~/jibo/utilities/src/robot_wifi_info.py')
 	src = '~/jibo/utilities/output/robot_wifi_info.json'
 
-	scan_wifi = 'python ~/jibo/utilities/src/robot_wifi_info.py'
+	scan_wifi = 'python {}'.format(path_tool)
 	os.system(scan_wifi)
 
 	copy = 'cp {} {}'.format(src, path)
