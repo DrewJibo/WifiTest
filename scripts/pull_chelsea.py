@@ -128,7 +128,7 @@ def print_signals(path, target_ssid, new_path):
 
 def main():
 	
-    path_json = sys.argv[1]
+	path_json = sys.argv[1]
 	path_dir = sys.argv[2]
 	ssid = sys.argv[3]	
 	
