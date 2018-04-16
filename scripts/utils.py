@@ -1,7 +1,6 @@
-import os, sys
+import os
 import json
 import paramiko
-import time
 from prettytable import PrettyTable
 
 
@@ -46,7 +45,7 @@ def run_tool(path, robot_name):
 	Grabs bssid's and signals from json file.
 	Creates a new json file with those key-values.
 """
-def print_signals(path, target_ssid, new_path):
+def get_signals(path, target_ssid, new_path):
 	new_path = '{}/test.json'.format(new_path)
 	new_data = {}
 
@@ -124,26 +123,3 @@ def print_signals(path, target_ssid, new_path):
 
 		with open(new_path, 'w') as file:
 			json.dump(new_data, file, indent=4)
-
-
-def main():
-	ssid = sys.argv[1]
-	robot_name = get_robot_name()
-
-	path = os.path.expanduser('~/jibo/WifiTest/logs/{}'.format(robot_name))
-	
-	if not os.path.exists(path):
-		os.makedirs(path)
-
-	files = os.listdir(path)
-	file_count = len(files)
-
-	filename = 'wifi-scan-{}.json'.format(file_count)
-	path_json = '{}/{}'.format(path, filename)
-
-	run_tool(path_json, robot_name)
-	print_signals(path_json, ssid, path)
-
-
-if __name__ == "__main__":
-	main()
