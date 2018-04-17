@@ -2,3 +2,4 @@ venv/*
 *.pyc
 *.json
 .DS_Store
+tests/*
