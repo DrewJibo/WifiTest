@@ -4,8 +4,7 @@ import utils
 
 def main():
 	ssid = sys.argv[1]
-	#robot_name = utils.get_robot_name()
-	robot_name = None
+	robot_name = utils.get_robot_name()
 
 	path = os.path.expanduser('~/jibo/WifiTest/logs/{}'.format(robot_name))
 	
